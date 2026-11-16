@@ -4,6 +4,13 @@ Bu dosya yalnızca gerçekten tamamlanan kontrolleri kaydeder.
 
 ## Tamamlanan kontroller
 
+- GitHub Actions çalışması [43980815097](https://github.com/mephistoggz/DockSense/actions/runs/43980815097), kaynak commit `a4e845d722edecc1acee431ad5d70b2e4b89ff8b`: **başarılı**. 16 C politika doğrulaması, altı derleme güvenliği senaryosu, Intel/Apple Silicon derlemesi, paket/imza doğrulaması ve ZIP üretimi geçti.
+- İlk CI çalışması, `lipo` parametre sırasındaki hatayı ortaya çıkardı. Dosya yolu `-verify_arch` önüne taşındı; sahte araç testi de bu sıralamayı kontrol edecek şekilde güçlendirildi.
+- İndirilen CI arşivinin SHA-256 özeti GitHub çıktısıyla eşleşti: `63859b0f37702568c0498998c438f4535ecf89d0cd7586c792433064b3288495`.
+- Yerel `codesign --verify --strict` kontrolü geçti. `file` çıktısında hem `x86_64` hem `arm64` doğrulandı.
+- Mac üzerindeki `--diagnose` sonucu: `Dock API: available`, `Accessibility: not granted`, `Window enumeration: ok`, `Visible windows: 4`.
+- Uygulamanın açık olduğu süreç listesinde doğrulandı. Yaklaşık 92 saniyelik çalışma sonunda toplam CPU süresi 1,32 saniyeydi; anlık CPU %0,0 idi. Bu tek gözlem karşılaştırmalı enerji veya pil ömrü ölçümü değildir.
+- İndirilen ad-hoc imzalı paket ilk açılışta macOS güvenlik politikasına takıldı. Daha sonraki açılış ve teşhis başarılı oldu. Developer ID/notarizasyon henüz yoktur.
 - `sh -n build.sh`, `sh -n tests/run.sh`, `sh -n tests/build_safety.sh`: kabuk sözdizimi kontrolleri geçti.
 - `plutil -lint Info.plist`: uygulama ayar dosyası geçerli.
 - `sh tests/build_safety.sh`: gerçek derleme betiği, sahte derleyici/imzalayıcı ile altı senaryoda çalıştırıldı. Eksik derleyici, derleme hatası, mimari kontrol hatası, imzalama hatası ve imza doğrulama hatasında önceki uygulama korundu; başarılı senaryoda yeni paket yerini aldı. Geçici derleme klasörleri hata yollarında temizlendi.
@@ -12,9 +19,10 @@ Bu dosya yalnızca gerçekten tamamlanan kontrolleri kaydeder.
 
 ## Henüz tamamlanmayanlar
 
-- C politika testlerinin çalıştırılması, Objective-C derlemesi, universal mimari ve uygulama imza doğrulaması: Apple Command Line Tools kurulumu bekleniyor.
-- Gerçek Dock davranışı, Erişilebilirlik bildirimlerinin alınması ve pil/CPU ölçümü: derlemeden sonra yapılacak.
-- GitHub yayını ve CI sonucu: hesap bağlantısı ve testler bekleniyor.
+- Bu Mac üzerinde kaynak koddan derleme: Apple Command Line Tools kurulumu bekleniyor; derleme GitHub'ın Mac ortamında doğrulandı.
+- Pencere büyütme/küçültme, çoklu ekran, Space/uyku senaryoları ve Erişilebilirlik bildirimlerinin alınması.
+- Eski sürümle kontrollü CPU/enerji karşılaştırması ve pil ölçümü.
+- Depo GitHub'a özel olarak yüklendi; genel dağıtıma hazır, tam davranış testli bir sürüm olarak sunulmadı.
 
 ## Masaüstü kabul testleri
 

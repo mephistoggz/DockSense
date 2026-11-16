@@ -6,7 +6,7 @@ MasaustuDock projesinin yeniden adlandırılmış, daha az periyodik kontrol yap
 
 ## Durum
 
-Geliştirme sürümü. Derleme, gerçek masaüstü davranışı ve pil ölçümleri tamamlanmadan doğrulanmış sürüm olarak değerlendirilmemelidir. Kontrol sonuçları `VALIDATION.md` dosyasındadır.
+Geliştirme sürümü. [GitHub macOS testleri ve universal derleme geçti](https://github.com/mephistoggz/DockSense/actions/runs/43980815097). Mac üzerinde açılış ve salt okunur Dock/pencere erişimi de doğrulandı. Pencere davranışlarının tamamı ve pil kazancı henüz doğrulanmadı. Ayrıntılı sonuçlar `VALIDATION.md` dosyasındadır.
 
 ## Enerji yaklaşımı
 
