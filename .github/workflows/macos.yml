@@ -1,0 +1,17 @@
+name: macOS build and tests
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test, build both architectures, verify signature
+        run: sh tests/run.sh
+      - name: Package application
+        run: ditto -c -k --sequesterRsrc --keepParent build/DockSense.app build/DockSense.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: DockSense-macOS
+          path: build/DockSense.zip
