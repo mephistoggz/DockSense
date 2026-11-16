@@ -24,7 +24,7 @@ xcrun clang -fobjc-arc -O2 -Wall -Wextra -Werror \
     main.m -o "$app/Contents/MacOS/DockSense"
 cp Info.plist "$app/Contents/Info.plist"
 plutil -lint "$app/Contents/Info.plist"
-xcrun lipo -verify_arch x86_64 arm64 "$app/Contents/MacOS/DockSense"
+xcrun lipo "$app/Contents/MacOS/DockSense" -verify_arch x86_64 arm64
 codesign --force --sign - "$app"
 codesign --verify --strict "$app"
 if [ -e build/DockSense.app ]; then mv build/DockSense.app "$stage/previous.app"; fi

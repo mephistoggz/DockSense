@@ -21,6 +21,7 @@ elif [ "$1" = clang ]; then
     done
     exit 1
 elif [ "$1" = lipo ]; then
+    [ "$#" -eq 5 ] && [ -f "$2" ] && [ "$3" = -verify_arch ] && [ "$4" = x86_64 ] && [ "$5" = arm64 ] || exit 1
     [ "${FAIL_STAGE:-}" != architecture ]
 else
     exit 1
