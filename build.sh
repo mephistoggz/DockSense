@@ -6,7 +6,8 @@ if ! xcrun --find clang >/dev/null 2>&1; then
     exit 1
 fi
 mkdir -p build
-stage=$(mktemp -d "$PWD/build/.stage.XXXXXX")
+# Sign outside cloud-synced folders, which may attach FinderInfo to .app bundles.
+stage=$(mktemp -d "${TMPDIR:-/tmp}/DockSense-build.XXXXXX")
 cleanup() {
     if [ -d "$stage/previous.app" ] && [ ! -e build/DockSense.app ]; then
         mv "$stage/previous.app" build/DockSense.app
@@ -22,7 +23,9 @@ xcrun clang -fobjc-arc -O2 -Wall -Wextra -Werror \
     -arch x86_64 -arch arm64 -mmacosx-version-min=11.0 \
     -framework Cocoa -framework ApplicationServices \
     main.m -o "$app/Contents/MacOS/DockSense"
-cp Info.plist "$app/Contents/Info.plist"
+# Copy file contents only: Finder metadata from a downloaded source tree can
+# otherwise make codesign reject the newly generated application.
+cat Info.plist > "$app/Contents/Info.plist"
 plutil -lint "$app/Contents/Info.plist"
 xcrun lipo "$app/Contents/MacOS/DockSense" -verify_arch x86_64 arm64
 codesign --force --sign - "$app"

@@ -7,6 +7,8 @@ trap 'rm -rf "$temp"' EXIT
 trap 'exit 130' INT
 trap 'exit 143' TERM
 mkdir -p "$temp/bin" "$temp/project/build/DockSense.app"
+mkdir -p "$temp/staging"
+export TMPDIR="$temp/staging"
 cp build.sh Info.plist main.m Policy.h "$temp/project/"
 printf 'previous working app\n' > "$temp/project/build/DockSense.app/sentinel"
 cat > "$temp/bin/xcrun" <<'EOF'
@@ -42,7 +44,7 @@ for stage in missing compile architecture sign verify; do
         echo "FAIL: $stage should fail" >&2; exit 1
     fi
     test "$(cat "$temp/project/build/DockSense.app/sentinel")" = 'previous working app'
-    if find "$temp/project/build" -name '.stage.*' | /usr/bin/grep -q .; then
+    if find "$temp/staging" -name 'DockSense-build.*' | /usr/bin/grep -q .; then
         echo 'FAIL: staging directory leaked' >&2; exit 1
     fi
     echo "PASS: $stage failure preserves previous application"

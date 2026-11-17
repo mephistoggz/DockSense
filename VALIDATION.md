@@ -4,6 +4,9 @@ Bu dosya yalnızca gerçekten tamamlanan kontrolleri kaydeder.
 
 ## Tamamlanan kontroller
 
+- Apple Command Line Tools kurulduktan sonra `sh tests/run.sh` **bu Mac üzerinde de geçti**: 16 politika doğrulaması, altı derleme güvenliği senaryosu, universal derleme ve imza doğrulaması.
+- Yerel derlemede bulut eşitlemesinin `.app` klasörüne eklediği FinderInfo imzalamayı engelliyordu. Paket sistemin geçici klasöründe oluşturulup imzalandıktan sonra çıktı klasörüne taşınacak şekilde düzeltildi. Güvenlik testi geçici klasörün hata durumlarında temizlendiğini de kontrol ediyor.
+- Sistem Ayarları'nda iki DockSense kaydı görüldü: biri izinli, biri izinsiz. Kullanıcı izin verdiğini doğruladı; komut satırı teşhisi ile çalışan GUI kopyasının izin atfı aynı kabul edilmemelidir.
 - GitHub Actions çalışması [43980815097](https://github.com/mephistoggz/DockSense/actions/runs/43980815097), kaynak commit `a4e845d722edecc1acee431ad5d70b2e4b89ff8b`: **başarılı**. 16 C politika doğrulaması, altı derleme güvenliği senaryosu, Intel/Apple Silicon derlemesi, paket/imza doğrulaması ve ZIP üretimi geçti.
 - İlk CI çalışması, `lipo` parametre sırasındaki hatayı ortaya çıkardı. Dosya yolu `-verify_arch` önüne taşındı; sahte araç testi de bu sıralamayı kontrol edecek şekilde güçlendirildi.
 - İndirilen CI arşivinin SHA-256 özeti GitHub çıktısıyla eşleşti: `63859b0f37702568c0498998c438f4535ecf89d0cd7586c792433064b3288495`.
@@ -19,7 +22,6 @@ Bu dosya yalnızca gerçekten tamamlanan kontrolleri kaydeder.
 
 ## Henüz tamamlanmayanlar
 
-- Bu Mac üzerinde kaynak koddan derleme: Apple Command Line Tools kurulumu bekleniyor; derleme GitHub'ın Mac ortamında doğrulandı.
 - Pencere büyütme/küçültme, çoklu ekran, Space/uyku senaryoları ve Erişilebilirlik bildirimlerinin alınması.
 - Eski sürümle kontrollü CPU/enerji karşılaştırması ve pil ölçümü.
 - Depo GitHub'a özel olarak yüklendi; genel dağıtıma hazır, tam davranış testli bir sürüm olarak sunulmadı.
