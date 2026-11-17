@@ -1,70 +1,71 @@
+
 # DockSense
 
-macOS için küçük bir menü çubuğu uygulaması. Bir pencere bir ekranın kullanılabilir alanını tamamen kapladığında Dock'u otomatik gizler; aksi durumda Dock'u görünür tutar.
+A lightweight menu bar application for macOS. Automatically hides the Dock when a window completely fills the usable area of a screen; otherwise, keeps the Dock visible.
 
-MasaustuDock projesinin yeniden adlandırılmış, daha az periyodik kontrol yapacak şekilde düzenlenmiş sürümüdür. Kaynak kod Objective-C'dir; üçüncü taraf bağımlılık yoktur.
+DockSense is a renamed and optimized version of the MasaustuDock project, designed to reduce periodic polling. The source code is written in Objective-C with no third-party dependencies.
 
-## Durum
+## Status
 
-Geliştirme sürümü. [GitHub macOS testleri](https://github.com/mephistoggz/DockSense/actions) ve yerel universal derleme doğrulandı. Mac üzerinde açılış, Dock/pencere erişimi ve Finder'ın “Doldur / Önceki Boyuta Dön” akışında Dock'un gizlenip yeniden görünmesi test edildi. İzinli olay modu, çoklu ekran ve pil kazancı henüz doğrulanmadı. Ayrıntılı sonuçlar `VALIDATION.md` dosyasındadır.
+Development version. [GitHub macOS tests](https://github.com/mephistoggz/DockSense/actions) and local universal builds have been verified. Application startup, Dock/window access, and the Dock hiding and reappearing during Finder's "Fill / Return to Previous Size" workflow have been tested on a Mac. Permission-based event monitoring, multi-display functionality, and actual battery savings have not yet been verified. Detailed results are available in `VALIDATION.md`.
 
-## Enerji yaklaşımı
+## Energy Efficiency
 
-- Erişilebilirlik izniyle ön plandaki uygulamanın pencere hareketleri ve boyut değişiklikleri dinlenir.
-- Art arda gelen olaylar 250 ms içinde birleştirilir.
-- Uygulama, Space ve ekran değişiklikleri sistem bildirimlerinden takip edilir.
-- Desteklenen pencere bildirimleri varsa 15 saniyelik yedek kontrol kullanılır. İzin yoksa veya uygulama bildirimleri desteklemiyorsa aralık 3 saniyedir.
-- Yedek zamanlayıcıda %20 tolerans vardır; sistem kontrolleri başka işlerle birleştirebilir.
-- Uyku, ekran kapanması ve kullanıcı oturumunun pasifleşmesi sırasında tarama durur.
-- Dock ayarı yalnızca gerektiğinde değiştirilir.
-- macOS pencere döşemesinin 8 puanlık kenar boşluğu, ekranı dolduran pencere hesabına dahildir.
+- With Accessibility permission, the application monitors window movement and resizing events from the foreground application.
+- Consecutive events are consolidated within a 250 ms debounce interval.
+- Application, Space, and display changes are tracked through system notifications.
+- When supported window notifications are available, a 15-second fallback polling interval is used. Without permission, or when an application does not support notifications, the interval is 3 seconds.
+- Fallback timers use a 20% tolerance, allowing the system to consolidate scheduled operations.
+- Window scanning stops during system sleep, display sleep, and inactive user sessions.
+- Dock settings are modified only when necessary.
+- The 8-point margin used by macOS window tiling is taken into account when determining whether a window fills the screen.
 
-Eski sürüm 0,4 saniyede bir tarıyordu: saatte yaklaşık 9.000 zamanlanmış kontrol. Olay olmayan durumda yeni sürüm nominal olarak 240 (15 sn) veya 1.200 (3 sn) kontrol planlar. Bunlar pil tasarrufu ölçümü değildir; pencere olayları ek kontrol oluşturur ve toplam enerji tüketimi ayrıca ölçülmelidir.
+The previous version scanned every 0.4 seconds, resulting in approximately 9,000 scheduled checks per hour. Under idle conditions, the new version nominally schedules 240 checks (15-second interval) or 1,200 checks (3-second interval) per hour. These figures do not represent measured battery savings; window events can trigger additional checks, and overall energy consumption must be measured separately.
 
-## Gereksinimler ve derleme
+## Requirements and Build
 
-- macOS 11 veya üzeri; Intel ya da Apple Silicon.
-- Apple Command Line Tools veya Xcode. Kurulum: `xcode-select --install`.
+- macOS 11 or later; Intel or Apple Silicon.
+- Apple Command Line Tools or Xcode. Install using `xcode-select --install`.
 
 ```sh
 sh tests/run.sh
 open build/DockSense.app
 ```
 
-Derleme iki işlemci mimarisini içerir ve yerel ad-hoc imza uygular. Developer ID imzası veya Apple notarizasyonu içermez. Betik derleme/imza hatalarını gizlemez; başarısız derlemede eski uygulamayı korur.
+The build supports both processor architectures and applies a local ad-hoc code signature. It does not include Developer ID signing or Apple notarization. The build script does not suppress compilation or signing errors and preserves the previous application bundle if a build fails.
 
-## Kullanım
+## Usage
 
-1. Önce eski MasaustuDock uygulamasından çıkın; iki uygulama aynı Dock ayarını yönetmemeli.
-2. DockSense'i çalıştırın. Menü çubuğunda **DS** görünür.
-3. İsteğe bağlı olarak **Verimli mod için erişim izni ver…** öğesini seçin ve Sistem Ayarları → Gizlilik ve Güvenlik → Erişilebilirlik bölümünden izin verin. İzin vermeden de seyrek kontrol modu çalışır.
-4. **Durum ve kontrol sayısı…** öğesi etkin modu ve tarama sayısını gösterir.
-5. **DockSense'ten Çık**, uygulama başlatılırken geçerli olan Dock ayarını geri yükler.
+1. Quit the previous MasaustuDock application to prevent both applications from managing the same Dock setting simultaneously.
+2. Launch DockSense. **DS** will appear in the menu bar.
+3. Optionally, select **Grant Accessibility Permission for Efficient Mode…** and enable DockSense under System Settings → Privacy & Security → Accessibility. The application also works without this permission using periodic polling.
+4. Select **Status and Check Count…** to view the active operating mode and the number of window scans performed.
+5. Select **Quit DockSense** to restore the Dock setting that was active when the application launched.
 
-Salt okunur teşhis:
+Read-only diagnostics:
 
 ```sh
 build/DockSense.app/Contents/MacOS/DockSense --diagnose
 ```
 
-Bu komut Dock ayarını değiştirmez ve pencere başlıklarını yazdırmaz. Uygulama ağ bağlantısı kurmaz veya telemetri göndermez.
+This command does not modify Dock settings or print window titles. The application does not establish network connections or transmit telemetry.
 
-## Bilinen sınırlar
+## Known Limitations
 
-- Dock kontrolü, orijinal projedeki belgelenmemiş `CoreDock` işlevlerine bağımlıdır. İşlevler bulunamazsa uygulama ayarı değiştirmeden hata gösterir. Gelecekteki macOS uyumluluğu garanti edilmez.
-- Herhangi bir monitörü kaplayan pencere otomatik gizlemeyi tetikler. Yalnızca Dock'un bulunduğu monitörü seçme özelliği yoktur.
-- Ön planda olmayan uygulamaların veya bildirim göndermeyen uygulamaların değişiklikleri yedek kontrole kadar gecikebilir; bu gecikme olay modunda yaklaşık 15 saniye ve zamanlayıcı toleransı kadar olabilir.
-- Başlangıçta ve ekran düzeni/uyanma değişikliklerinde kullanılabilir alanı ölçmek için Dock kısa süreliğine görünür olabilir.
-- Zorla kapatma veya çökme durumunda eski Dock ayarı geri yüklenmeyebilir.
-- DockSense çalışırken sistemin Dock otomatik gizleme ayarını yönetir; elle yapılan değişiklikler bir sonraki kontrolde geçersiz kalabilir.
-- Otomatik başlangıç, uygulama simgesi ve notarize edilmiş dağıtım bu sürümde yoktur.
+- Dock control depends on undocumented `CoreDock` functions inherited from the original project. If these functions are unavailable, the application displays an error without modifying the Dock settings. Compatibility with future macOS versions is not guaranteed.
+- A window filling any connected display triggers automatic Dock hiding. There is currently no option to restrict detection to the display containing the Dock.
+- Changes in background applications or applications that do not support window notifications may not be detected until the next fallback check. In event-based mode, this delay may reach approximately 15 seconds, plus timer tolerance.
+- The Dock may briefly appear during startup, display configuration changes, or wake-up while the application measures the usable screen area.
+- If DockSense crashes or is forcibly terminated, the previous Dock setting may not be restored.
+- While DockSense is running, it manages the system's Dock auto-hide setting. Manual changes may be overridden during the next check.
+- Launch at login, a dedicated application icon, and notarized distribution are not included in this version.
 
-## Test
+## Testing
 
-`sh tests/run.sh` 16 geometri/zamanlama doğrulamasını çalıştırır, iki mimari için derler ve paket imzasını doğrular. GitHub Actions aynı kontrolleri macOS üzerinde çalıştıracak şekilde hazırlanmıştır. Bu otomatik kontroller gerçek masaüstü ve pil testlerinin yerine geçmez; manuel liste `VALIDATION.md` içindedir.
+`sh tests/run.sh` executes 16 geometry and timing validation checks, builds the application for both processor architectures, and verifies the application bundle's code signature. GitHub Actions is configured to run the same checks on macOS. These automated checks do not replace real-world desktop testing or battery consumption measurements; the manual testing checklist is available in `VALIDATION.md`.
 
-## Teknik kaynaklar
+## Technical References
 
 - [Apple: AXObserverCreate](https://developer.apple.com/documentation/applicationservices/1460133-axobservercreate)
 - [Apple: AXObserverAddNotification](https://developer.apple.com/documentation/applicationservices/1462089-axobserveraddnotification)
-- [Apple: NSWorkspace uygulama bildirimleri](https://developer.apple.com/documentation/appkit/nsworkspace/didactivateapplicationnotification)
+- [Apple: NSWorkspace Application Notifications](https://developer.apple.com/documentation/appkit/nsworkspace/didactivateapplicationnotification)
