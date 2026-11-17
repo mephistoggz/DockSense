@@ -32,4 +32,13 @@ codesign --force --sign - "$app"
 codesign --verify --strict "$app"
 if [ -e build/DockSense.app ]; then mv build/DockSense.app "$stage/previous.app"; fi
 mv "$app" build/DockSense.app
+# A file provider can add cosmetic FinderInfo again during the move. Remove
+# only that attribute, never quarantine/provenance or other security metadata.
+if xattr -p com.apple.FinderInfo build/DockSense.app >/dev/null 2>&1; then
+    xattr -d com.apple.FinderInfo build/DockSense.app
+fi
+if ! codesign --verify --strict build/DockSense.app; then
+    rm -rf build/DockSense.app
+    exit 1 # cleanup restores the previous application
+fi
 echo 'Hazır: build/DockSense.app'

@@ -33,13 +33,16 @@ cat > "$temp/bin/codesign" <<'EOF'
 #!/bin/sh
 case "$1" in
     --force) [ "${FAIL_STAGE:-}" != sign ] ;;
-    --verify) [ "${FAIL_STAGE:-}" != verify ] ;;
+    --verify)
+        [ "${FAIL_STAGE:-}" != verify ] || exit 1
+        if [ "${FAIL_STAGE:-}" = final_verify ] && [ "$3" = build/DockSense.app ]; then exit 1; fi
+        ;;
     *) exit 1 ;;
 esac
 EOF
 chmod +x "$temp/bin/xcrun" "$temp/bin/codesign"
 export PATH="$temp/bin:$PATH"
-for stage in missing compile architecture sign verify; do
+for stage in missing compile architecture sign verify final_verify; do
     if FAIL_STAGE="$stage" sh "$temp/project/build.sh" > "$temp/log" 2>&1; then
         echo "FAIL: $stage should fail" >&2; exit 1
     fi
