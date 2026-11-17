@@ -6,8 +6,8 @@ int main(void) {
     DSRect area = {0, 25, 1440, 800};
     assert(DSCovers(area, area));
     assert(DSCovers((DSRect){-5, 20, 1450, 810}, area));
-    assert(DSCovers((DSRect){4, 29, 1432, 792}, area));
-    assert(!DSCovers((DSRect){5, 25, 1440, 800}, area));
+    assert(DSCovers((DSRect){8, 33, 1424, 784}, area));
+    assert(!DSCovers((DSRect){9, 25, 1440, 800}, area));
     assert(!DSCovers((DSRect){0, 25, 720, 800}, area));
     assert(!DSCovers((DSRect){0, 25, 1440, 400}, area));
     assert(!DSCovers((DSRect){1440, 25, 1440, 800}, area));

@@ -4,6 +4,9 @@ Bu dosya yalnızca gerçekten tamamlanan kontrolleri kaydeder.
 
 ## Tamamlanan kontroller
 
+- Son yerel test: **16 politika doğrulaması + 7 derleme güvenliği senaryosu geçti**. Paket hedef klasöre taşındıktan sonra da imza doğrulaması yapılıyor; bu son adım başarısız olursa önceki paket geri yükleniyor. Bulut eşitlemesinin eklediği yalnızca kozmetik `com.apple.FinderInfo` bilgisi temizleniyor; güvenlik metaverileri kaldırılmıyor.
+- Gerçek Finder testi: ekran 1440×900, Dock açıkken kullanılabilir alan 1440×800; macOS “Doldur” penceresi x=8, y=33, 1424×784 idi. Eski 4 puan tolerans bu pencereyi kaçırıyordu. Tolerans 8'e düzeltildi; sınır testi 8 puanı kabul edip 9 puanı reddediyor.
+- Düzeltilmiş yerel uygulama açıkken Finder “Doldur” sonrasında `com.apple.dock autohide=1`, “Önceki Boyuta Dön” sonrasında `autohide=0` doğrulandı. Test penceresi kapatıldı ve test için gizlenen diğer uygulamalar geri gösterildi. Bu sonuç, erişim izni olmadan çalışan yedek kontrol yolunu doğrular.
 - Apple Command Line Tools kurulduktan sonra `sh tests/run.sh` **bu Mac üzerinde de geçti**: 16 politika doğrulaması, altı derleme güvenliği senaryosu, universal derleme ve imza doğrulaması.
 - Yerel derlemede bulut eşitlemesinin `.app` klasörüne eklediği FinderInfo imzalamayı engelliyordu. Paket sistemin geçici klasöründe oluşturulup imzalandıktan sonra çıktı klasörüne taşınacak şekilde düzeltildi. Güvenlik testi geçici klasörün hata durumlarında temizlendiğini de kontrol ediyor.
 - Sistem Ayarları'nda iki DockSense kaydı görüldü: biri izinli, biri izinsiz. Kullanıcı izin verdiğini doğruladı; komut satırı teşhisi ile çalışan GUI kopyasının izin atfı aynı kabul edilmemelidir.
@@ -22,7 +25,7 @@ Bu dosya yalnızca gerçekten tamamlanan kontrolleri kaydeder.
 
 ## Henüz tamamlanmayanlar
 
-- Pencere büyütme/küçültme, çoklu ekran, Space/uyku senaryoları ve Erişilebilirlik bildirimlerinin alınması.
+- Çoklu ekran, Space/uyku senaryoları ve Erişilebilirlik bildirimlerinin alınması.
 - Eski sürümle kontrollü CPU/enerji karşılaştırması ve pil ölçümü.
 - Depo GitHub'a özel olarak yüklendi; genel dağıtıma hazır, tam davranış testli bir sürüm olarak sunulmadı.
 

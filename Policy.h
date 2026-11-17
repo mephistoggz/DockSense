@@ -5,8 +5,9 @@
 typedef struct { double x, y, width, height; } DSRect;
 
 static inline bool DSCovers(DSRect window, DSRect area) {
-    const double tolerance = 4.0;
-    if (area.width <= 8 || area.height <= 8 || window.width < 100 || window.height < 100)
+    // macOS Fill leaves an 8-point inset when window tiling margins are enabled.
+    const double tolerance = 8.0;
+    if (area.width <= 16 || area.height <= 16 || window.width < 100 || window.height < 100)
         return false;
     return window.x <= area.x + tolerance && window.y <= area.y + tolerance &&
         window.x + window.width >= area.x + area.width - tolerance &&

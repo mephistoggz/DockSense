@@ -6,7 +6,7 @@ MasaustuDock projesinin yeniden adlandırılmış, daha az periyodik kontrol yap
 
 ## Durum
 
-Geliştirme sürümü. [GitHub macOS testleri ve universal derleme geçti](https://github.com/mephistoggz/DockSense/actions/runs/43980815097). Mac üzerinde açılış ve salt okunur Dock/pencere erişimi de doğrulandı. Pencere davranışlarının tamamı ve pil kazancı henüz doğrulanmadı. Ayrıntılı sonuçlar `VALIDATION.md` dosyasındadır.
+Geliştirme sürümü. [GitHub macOS testleri](https://github.com/mephistoggz/DockSense/actions) ve yerel universal derleme doğrulandı. Mac üzerinde açılış, Dock/pencere erişimi ve Finder'ın “Doldur / Önceki Boyuta Dön” akışında Dock'un gizlenip yeniden görünmesi test edildi. İzinli olay modu, çoklu ekran ve pil kazancı henüz doğrulanmadı. Ayrıntılı sonuçlar `VALIDATION.md` dosyasındadır.
 
 ## Enerji yaklaşımı
 
@@ -17,6 +17,7 @@ Geliştirme sürümü. [GitHub macOS testleri ve universal derleme geçti](https
 - Yedek zamanlayıcıda %20 tolerans vardır; sistem kontrolleri başka işlerle birleştirebilir.
 - Uyku, ekran kapanması ve kullanıcı oturumunun pasifleşmesi sırasında tarama durur.
 - Dock ayarı yalnızca gerektiğinde değiştirilir.
+- macOS pencere döşemesinin 8 puanlık kenar boşluğu, ekranı dolduran pencere hesabına dahildir.
 
 Eski sürüm 0,4 saniyede bir tarıyordu: saatte yaklaşık 9.000 zamanlanmış kontrol. Olay olmayan durumda yeni sürüm nominal olarak 240 (15 sn) veya 1.200 (3 sn) kontrol planlar. Bunlar pil tasarrufu ölçümü değildir; pencere olayları ek kontrol oluşturur ve toplam enerji tüketimi ayrıca ölçülmelidir.
 
